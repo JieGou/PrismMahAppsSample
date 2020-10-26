@@ -21,26 +21,35 @@ namespace PrismMahAppsSample.Shell.ViewModels
         private ILocalizerService localizerService = null;
 
         #region CTOR
-        
+
         /// <summary>
         /// CTOR
         /// </summary>
         public ShellSettingsFlyoutViewModel()
         {
             this.localizerService = Container.Resolve<ILocalizerService>(ServiceNames.LocalizerService);
-
+            //TODO MahApps.Metro主题 以及控件颜色 设置成中文
             // create metro theme color menu items for the demo
             this.ApplicationThemes = ThemeManager.AppThemes
-                                           .Select(a => new ApplicationTheme() { Name = a.Name, BorderColorBrush = a.Resources["BlackColorBrush"] as Brush, ColorBrush = a.Resources["WhiteColorBrush"] as Brush })
+                                           .Select(a => new ApplicationTheme()
+                                           {
+                                               Name = a.Name,
+                                               BorderColorBrush = a.Resources["BlackColorBrush"] as Brush,
+                                               ColorBrush = a.Resources["WhiteColorBrush"] as Brush
+                                           })
                                            .ToList();
 
             // create accent colors list
             this.AccentColors = ThemeManager.Accents
-                                            .Select(a => new AccentColor() { Name = a.Name, ColorBrush = a.Resources["AccentColorBrush"] as Brush })
+                                            .Select(a => new AccentColor()
+                                            {
+                                                Name = a.Name,
+                                                ColorBrush = a.Resources["AccentColorBrush"] as Brush
+                                            })
                                             .ToList();
 
             this.SelectedTheme = this.ApplicationThemes.FirstOrDefault();
-            this.SelectedAccentColor = this.AccentColors.Where(c => c.Name.Equals("Cyan")).FirstOrDefault();
+            this.SelectedAccentColor = this.AccentColors.FirstOrDefault(c => c.Name.Equals("Cyan"));
         }
 
         #endregion CTOR
@@ -111,7 +120,6 @@ namespace PrismMahAppsSample.Shell.ViewModels
             }
         }
 
-
         /// <summary>
         /// Supported languages
         /// </summary>
@@ -139,9 +147,13 @@ namespace PrismMahAppsSample.Shell.ViewModels
                 if (value != null && value != this.localizerService.SelectedLanguage)
                 {
                     if (localizerService != null)
+                    {
                         this.localizerService.SelectedLanguage = value;
-                }
 
+                        //切换语言 添加发布事件
+                        EventAggregator.GetEvent<StatusBarMessageUpdateEvent>().Publish(String.Format("setting language to {0}", value.Name));
+                    }
+                }
             }
         }
 

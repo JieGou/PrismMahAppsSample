@@ -12,6 +12,11 @@ using Prism.Logging;
 
 namespace PrismMahAppsSample.Shell
 {
+    //TODO WPF记住上次的状态
+    /*
+     * 包括语言 主题 以及颜色
+     */
+
     public class Bootstrapper : UnityBootstrapper
     {
         /// <summary>
